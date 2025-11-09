@@ -1,4 +1,9 @@
 import unittest
+
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from app import greet
 
 
@@ -6,7 +11,7 @@ class TestApp(unittest.TestCase):
     def test_greet(self):
         self.assertEqual(
             greet("World"),
-            "Hello, I'm Tarek Mourad!"
+            "Hello, World fromFirstName LastName!"
         )
 
 

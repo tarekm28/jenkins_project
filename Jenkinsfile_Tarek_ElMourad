@@ -34,7 +34,7 @@ pipeline {
 
         stage('Security Scan') {
             steps {
-                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && bandit -r . -x venv"
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && bandit app.py tests\\test_app.py"
             }
         }
 

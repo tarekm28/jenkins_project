@@ -8,70 +8,45 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                script {
-                    // Create venv if it doesn't exist
-                    if (!fileExists("${env.WORKSPACE}/${VIRTUAL_ENV}")) {
-                        sh "python -m venv ${VIRTUAL_ENV}"
-                    }
-                    // Install dependencies
-                    sh "source ${VIRTUAL_ENV}/bin/activate && pip install -r requirements.txt"
-                }
+                bat "if not exist %VIRTUAL_ENV% ( python -m venv %VIRTUAL_ENV% )"
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && pip install -r requirements.txt"
             }
         }
 
         stage('Lint') {
             steps {
-                script {
-                    sh "source ${VIRTUAL_ENV}/bin/activate && flake8 app.py"
-                }
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && flake8 app.py"
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    // Run tests with pytest
-                    sh "source ${VIRTUAL_ENV}/bin/activate && pytest"
-                }
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && pytest"
             }
         }
 
         stage('Coverage') {
             steps {
-                script {
-                    // Run tests under coverage and print a report
-                    sh "source ${VIRTUAL_ENV}/bin/activate && coverage run -m pytest"
-                    sh "source ${VIRTUAL_ENV}/bin/activate && coverage report -m"
-                    // Optional: generate XML/HTML if you want extra Jenkins plugins later
-                    // sh "source ${VIRTUAL_ENV}/bin/activate && coverage xml"
-                    // sh "source ${VIRTUAL_ENV}/bin/activate && coverage html"
-                }
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && coverage run -m pytest"
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && coverage report -m"
             }
         }
 
         stage('Security Scan') {
             steps {
-                script {
-                    // Scan the repo for common security issues
-                    sh "source ${VIRTUAL_ENV}/bin/activate && bandit -r ."
-                }
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && bandit -r ."
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    // Simple local deployment: run the app in the venv
-                    sh "source ${VIRTUAL_ENV}/bin/activate && python app.py"
-                    echo "Deploying application locally via Jenkins pipeline..."
-                }
+                bat "call %VIRTUAL_ENV%\\Scripts\\activate.bat && python app.py"
             }
         }
     }
 
     post {
         always {
-            // Clean the workspace after the build, as in the handout
             cleanWs()
         }
     }

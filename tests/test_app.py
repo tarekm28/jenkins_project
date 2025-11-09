@@ -11,7 +11,7 @@ class TestApp(unittest.TestCase):
     def test_greet(self):
         self.assertEqual(
             greet("World"),
-            "Hello, World fromFirstName LastName!"
+            "Hello World, I'm Tarek Mourad"
         )
 
 
